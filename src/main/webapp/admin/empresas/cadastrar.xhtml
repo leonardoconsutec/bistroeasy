@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/templates/basePrincipal.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton value="Cancelar" icon="ui-icon-cancel"
+						action="listar.jsf" process="@form" />
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		<h:form prependId="false" id="frmCadEmpresa">
+			<p:panel id="painel" header="Cadastro de Empresas">
+				<p:growl />
+				<h:panelGrid id="panelBasico" columns="3" cellpadding="5">
+					<p:outputLabel value="Razão Social: * " />
+					<p:inputText id="razao" value="#{empresaMB.empresa.razaoSocial}"
+						size="80" maxlength="80" required="true"
+						requiredMessage="Razão social é obrigatório">
+						<f:validateLength minimum="6" />
+					</p:inputText>
+					<p:message for="razao" id="msgrazao" display="icon" />
+					<p:outputLabel value="Nome Fantasia: * " />
+					<p:inputText id="fantasia"
+						value="#{empresaMB.empresa.nomeFantasia}" size="80" maxlength="80"
+						required="true" requiredMessage="Nome Fantasia é obrigatório">
+						<f:validateLength minimum="6" />
+					</p:inputText>
+					<p:message for="fantasia" id="msgfantasia" display="icon" />
+					<p:outputLabel value="CNPJ: * " />
+					<p:inputMask id="cnpj" mask="99.999.999/9999-99" maxlength="18"
+						size="18" value="#{empresaMB.empresa.cnpj}" required="true"
+						requiredMessage="CNPJ é obrigatório">
+						<f:validateLength minimum="18" />
+					</p:inputMask>
+					<p:message for="cnpj" id="msgcnpj" display="icon" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelCEP" columns="3" cellpadding="5">
+					<p:outputLabel value="CEP: " />
+					<p:inputMask id="cep" mask="99999-999"
+						value="#{empresaMB.empresa.cep}" maxlength="10" size="10">
+					</p:inputMask>
+					<p:commandButton value="Buscar" id="btnBuscar" process="@form"
+						update="frmCadEmpresa" action="#{empresaMB.buscarEnderecoCEP()}" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelEndereco" columns="3" cellpadding="5">
+					<p:outputLabel value="Logradouro: " />
+					<p:inputText id="logradouro"
+						value="#{empresaMB.empresa.logradouro}" size="80" maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="numero: " />
+					<p:inputText id="numero" value="#{empresaMB.empresa.numero}"
+						size="10" maxlength="10" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Bairro: " />
+					<p:inputText id="bairro" value="#{empresaMB.empresa.bairro}"
+						size="80" maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Cidade: " />
+					<p:inputText id="cidade" value="#{empresaMB.empresa.cidade}"
+						size="80" maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="UF: " />
+					<p:inputText id="uf" value="#{empresaMB.empresa.uf}" size="2"
+						maxlength="2" />
+					<p:outputLabel value="" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelFisco" columns="3" cellpadding="5">
+					<p:outputLabel value="Inscrição Estadual: " />
+					<p:inputText id="ie" value="#{empresaMB.empresa.inscricaoEstadual}"
+						size="20" maxlength="20" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Inscrição Municipal: " />
+					<p:inputText id="im"
+						value="#{empresaMB.empresa.inscricaoMunicipal}" size="20"
+						maxlength="20" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Telefone: " />
+					<p:inputMask id="tel" mask="(99) 99999999?9"
+						value="#{empresaMB.empresa.telefone}" size="12" maxlength="12" />
+					<p:outputLabel value="" />
+				</h:panelGrid>
+				<p:commandButton action="#{empresaMB.save()}" value="Salvar"
+					update="painel" icon="ui-icon-check" />
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

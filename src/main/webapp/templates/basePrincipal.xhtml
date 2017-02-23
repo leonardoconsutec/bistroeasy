@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+body {
+	background-color: #FFFFFF;
+}
+
+.styleGreen {
+	width: 100px !important;
+	height: 100px !important;
+	font-size: 40px !important;
+	border-radius: 15px !important;
+	background-color: #00FF00 !important;
+}
+
+.styleRed {
+	width: 100px !important;
+	height: 100px !important;
+	font-size: 40px !important;
+	border-radius: 15px !important;
+	background-color: #FF0000 !important;
+}
+
+.styleYellow {
+	width: 100px !important;
+	height: 100px !important;
+	font-size: 40px !important;
+	border-radius: 15px !important;
+	background-color: #FFFF00 !important;
+}
+
+.menuVermelho {
+	background-color: #FF0000 !important;
+}
+</style>
+	<title>BistrôEasy v0.1(Beta)</title>
+</h:head>
+<body>
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="north" size="100" header="BistrôEasy"
+			resizable="false" closable="false" collapsible="false">
+			<h:form id="frmMenu">
+			   <p:growl/>
+			   <p:hotkey bind="shift+m" action="/admin/gestaomesas/listar.jsf"/>
+			   <p:hotkey bind="shift+a" action="/admin/caixas/abertura.jsf"/>
+			   <p:hotkey bind="shift+f" action="/admin/caixas/fechamento.jsf"/>
+				<p:menubar rendered="true">
+					<p:submenu label="Cadastros" icon="ui-icon-pencil">
+						<p:menuitem value="Usuários" url="/admin/usuarios/listar.jsf" />
+						<p:menuitem value="Empresas" url="/admin/empresas/listar.jsf" />
+						<p:menuitem value="Lojas" url="/admin/lojas/listar.jsf" />
+						<p:menuitem value="Mesas" url="/admin/mesas/listar.jsf" />
+						<p:submenu label="Funcionários">
+							<p:menuitem value="Gerentes" url="/admin/gerentes/listar.jsf" />
+							<p:menuitem value="Operadores de Caixa"
+								url="/admin/operadores/listar.jsf" />
+							<p:menuitem value="Garçons" url="/admin/garcons/listar.jsf" />
+						</p:submenu>
+						<p:menuitem value="Tipos de Produto"
+							url="/admin/tiposproduto/listar.jsf" />
+						<p:menuitem value="Produtos" url="/admin/produtos/listar.jsf" />
+					</p:submenu>
+					<p:submenu label="Caixa" icon=" ui-icon-cart">
+						<p:submenu label="Gestão do Caixa" icon=" ui-icon-cart">
+							<p:menuitem value="Posição" action="#{caixaMB.imprimePosicao()}"
+								target="_blank" update="frmMenu" process="frmMenu" ajax="false"/>
+							<p:menuitem value="Abertura do Caixa (shift+a)"
+								url="/admin/caixas/abertura.jsf" />
+							<p:menuitem value="Fechamento do Caixa (shift+f)"
+								url="/admin/caixas/fechamento.jsf" />
+						</p:submenu>
+						<p:menuitem value="Gestão de mesas (shift+m)"
+							url="/admin/gestaomesas/listar.jsf" />
+					</p:submenu>
+					<f:facet name="options">
+						<h:form id="frmUsuarioSessao">
+						    <p:outputLabel value="#{sessaoMB.alertaexpiracao}"></p:outputLabel>
+							<p:outputLabel style="margin-right:10px"
+								value="Usuario Logado: #{sessaoMB.usuario.nome}  " />
+							<p:commandButton value="Logout"
+								action="#{sessaoMB.fecharSessao()}" icon="ui-icon-extlink"
+								process="@form" update="@form" />
+						</h:form>
+					</f:facet>
+				</p:menubar>
+			</h:form>
+		</p:layoutUnit>
+		<p:layoutUnit position="south" size="100" resizable="false"
+			closable="false" collapsible="false">
+			<center>Copyright 2016 Consutec All rights reserved.</center>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="west" size="200" resizable="false"
+			closable="false" collapsible="false" class="ui-noborder">
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="east" size="200" resizable="false"
+			closable="false" collapsible="false" effect="fale" class="ui-noborder">
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+			<ui:insert name="content">Content Básico</ui:insert>
+		</p:layoutUnit>
+
+
+	</p:layout>
+</body>
+</html>

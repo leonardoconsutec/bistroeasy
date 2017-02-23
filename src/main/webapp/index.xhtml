@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>BistroEasy</title>
+</h:head>
+<body>
+	<ui:composition template="/templates/baseLogin.xhtml">
+		<ui:define name="content">
+			<h:form id="frmLogin">
+				<p:messages />
+				<p:panel>
+					<center>
+						<h:panelGrid columns="2">
+							<p:outputLabel value="Login:" />
+							<p:inputText value="#{sessaoMB.login}" />
+							<p:outputLabel value="Senha:" />
+							<p:password value="#{sessaoMB.senha}" />
+							<p:outputLabel value="Loja: " />
+							<p:selectOneMenu id="advanced"
+								value="#{sessaoMB.lojaSelecionada}" effect="fade" var="l"
+								converter="entityConverter">
+								<f:selectItems value="#{lojaMB.lojas}" var="lj"
+									itemLabel="#{lj.nomeFantasia}" itemValue="#{lj}" />
+								<p:column style="width:50%">
+									<h:outputText value="#{l.cnpj}" />
+								</p:column>
+								<p:column style="width:50%">
+									<h:outputText value="#{l.nomeFantasia}" />
+								</p:column>
+							</p:selectOneMenu>
+							<p:outputLabel value="" />
+							<p:commandButton value="Entrar" action="#{sessaoMB.logar()}"
+								update="frmLogin" />
+						</h:panelGrid>
+					</center>
+				</p:panel>
+			</h:form>
+			<p:dialog id="dialogLicenca" widgetVar="licenca" appendTo="@(body)"
+				modal="true" draggable="false" resizable="false" width="600"
+				height="400" header="Validação Licença">
+				<h:form id="frmLicenca">
+					<p:panel id="painelInfo" header="Atenção!">
+						<p:panelGrid id="gridInfo" class="ui-noborder" columns="2">
+							<h:outputText
+								value="Prezado Cliente, verificamos que sua licença expirou. Favor entrar em contato com nosso setor comercial e providenciar uma nova chave de liberação. Telefone: (86) 9-9990-8817  E-mail: comercial@consutec.net.br" />
+						</p:panelGrid>
+
+					</p:panel>
+					<p:panel id="painelChave" header="Informe a chave">
+						<p:panelGrid id="gridlicenca" columns="2" class="ui-noborder">
+							<p:outputLabel value="Chave:" />
+							<p:inputText value="#{sessaoMB.chave}" />
+							<p:commandButton value="Entrar"
+								action="#{sessaoMB.salvarLicenca()}" update=":frmLogin" process="frmLicenca"/>
+						</p:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

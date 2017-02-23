@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/basePrincipal.xhtml">
+	<ui:define name="content">
+		<p:panel header="Resumo Caixa">
+			<h:form>
+				<p:growl id="message" />
+				<h:panelGrid columns="2" >
+					<p:outputLabel value="Dinheiro: " />
+					<p:inputNumber id="din" value="#{caixaMB.resumo.dinheiro}"
+						symbol="R$ " symbolPosition="p" decimalSeparator=","
+						thousandSeparator="." disabled="true" />
+					<p:outputLabel value="Cartão: " />
+					<p:inputNumber id="car" value="#{caixaMB.resumo.cartao}"
+						symbol="R$ " symbolPosition="p" decimalSeparator=","
+						thousandSeparator="." disabled="true" />
+					<p:outputLabel value="Cheque: " />
+					<p:inputNumber id="che" value="#{caixaMB.resumo.cheque}"
+						symbol="R$ " symbolPosition="p" decimalSeparator=","
+						thousandSeparator="." disabled="true" />
+					<p:outputLabel value="Convênio: " />
+					<p:inputNumber id="con" value="#{caixaMB.resumo.convenio}"
+						symbol="R$ " symbolPosition="p" decimalSeparator=","
+						thousandSeparator="." disabled="true" />
+				</h:panelGrid>
+				<p:commandButton value="Fechar Caixa"
+					actionListener="#{caixaMB.fecharCaixa()}" update="@form">
+					<p:confirm header="Confirmação" message="Tem certeza?"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+</html>

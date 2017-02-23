@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/templates/basePrincipal.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton value="Cancelar" icon="ui-icon-cancel"
+						action="listar.jsf" process="@form" />
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		<h:form prependId="false" id="frmCadLojas">
+			<p:panel id="painel" header="Cadastro de Lojas">
+				<p:growl />
+				<h:panelGrid id="panelBasico" columns="3" cellpadding="5">
+					<p:outputLabel value="Razão Social: * " />
+					<p:inputText id="razao" value="#{lojaMB.loja.razaoSocial}"
+						size="80" maxlength="80" required="true"
+						requiredMessage="Razão social é obrigatório">
+						<f:validateLength minimum="6" />
+					</p:inputText>
+					<p:message for="razao" id="msgrazao" display="icon" />
+					<p:outputLabel value="Nome Fantasia: * " />
+					<p:inputText id="fantasia" value="#{lojaMB.loja.nomeFantasia}"
+						size="80" maxlength="80" required="true"
+						requiredMessage="Nome Fantasia é obrigatório">
+						<f:validateLength minimum="6" />
+					</p:inputText>
+					<p:message for="fantasia" id="msgfantasia" display="icon" />
+					<p:outputLabel value="CNPJ: * " />
+					<p:inputMask id="cnpj" mask="99.999.999/9999-99" maxlength="18"
+						size="18" value="#{lojaMB.loja.cnpj}" required="true"
+						requiredMessage="CNPJ é obrigatório">
+						<f:validateLength minimum="18" />
+					</p:inputMask>
+					<p:message for="cnpj" id="msgcnpj" display="icon" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelCEP" columns="3" cellpadding="5">
+					<p:outputLabel value="CEP: " />
+					<p:inputMask id="cep" mask="99999-999" value="#{lojaMB.loja.cep}"
+						maxlength="10" size="10">
+					</p:inputMask>
+					<p:commandButton value="Buscar" id="btnBuscar" process="@form"
+						update="frmCadLojas" action="#{lojaMB.buscarEnderecoCEP()}" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelEndereco" columns="3" cellpadding="5">
+					<p:outputLabel value="Logradouro: " />
+					<p:inputText id="logradouro" value="#{lojaMB.loja.logradouro}"
+						size="80" maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="numero: " />
+					<p:inputText id="numero" value="#{lojaMB.loja.numero}" size="10"
+						maxlength="10" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Bairro: " />
+					<p:inputText id="bairro" value="#{lojaMB.loja.bairro}" size="80"
+						maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Cidade: " />
+					<p:inputText id="cidade" value="#{lojaMB.loja.cidade}" size="80"
+						maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="UF: " />
+					<p:inputText id="uf" value="#{lojaMB.loja.uf}" size="2"
+						maxlength="2" />
+					<p:outputLabel value="" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelFisco" columns="3" cellpadding="5">
+					<p:outputLabel value="Inscrição Estadual: " />
+					<p:inputText id="ie" value="#{lojaMB.loja.inscricaoEstadual}"
+						size="20" maxlength="20" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Inscrição Municipal: " />
+					<p:inputText id="im" value="#{lojaMB.loja.inscricaoMunicipal}"
+						size="20" maxlength="20" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Telefone: " />
+					<p:inputMask id="tel" mask="(99) 99999999?9"
+						value="#{lojaMB.loja.telefone}" size="12" maxlength="12" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Ativa: " />
+					<p:selectBooleanButton id="ativa" value="#{lojaMB.loja.ativa}"
+						onLabel="Sim" offLabel="Não" style="width:60px" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Usa Taxa de Serviços: " />
+					<p:selectBooleanButton id="usataxa"
+						value="#{lojaMB.loja.usaTaxaServicos}" onLabel="Sim"
+						offLabel="Não" style="width:60px" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Taxa de Serviços (%): " />
+					<p:inputNumber value="#{lojaMB.loja.taxaServicos}"
+						decimalPlaces="2" decimalSeparator="," thousandSeparator="."
+						size="6" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Desconto Maximo Permitido (%): " />
+					<p:inputNumber value="#{lojaMB.loja.descontoMaximo}"
+						decimalPlaces="2" decimalSeparator="," thousandSeparator="."
+						size="6" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Empresa: " />
+					<p:selectOneMenu id="advanced" value="#{lojaMB.loja.empresa}"
+						effect="fade" var="e" converter="entityConverter">
+						<f:selectItems value="#{empresaMB.empresas}" var="emp"
+							itemLabel="#{emp.nomeFantasia}" itemValue="#{emp}" />
+
+						<p:column style="width:50%">
+							<h:outputText value="#{e.cnpj}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{e.nomeFantasia}" />
+						</p:column>
+					</p:selectOneMenu>
+					<p:outputLabel value="" />
+				</h:panelGrid>
+				<p:commandButton action="#{lojaMB.save()}" value="Salvar"
+					update="painel" icon="ui-icon-check" process="@form" />
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

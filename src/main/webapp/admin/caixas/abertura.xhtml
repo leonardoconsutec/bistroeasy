@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/basePrincipal.xhtml">
+	<ui:define name="content">
+
+
+		<h:form id="frmCodigo">
+			<p:growl />
+			<p:panel id="panelCodigo" header="Informe o Código do Operador">
+				<p:panelGrid id="gridCodigo" columns="3" class="ui-noborder">
+					<p:outputLabel value="Codigo Operador:" />
+					<p:inputNumber value="#{caixaMB.operador.id}" decimalPlaces="0"
+						decimalSeparator="," thousandSeparator="." size="6"/>
+					<p:commandButton value="Selecionar" icon="ui-icon-arrowthick-1-e"
+						action="#{caixaMB.abrirCaixa()}" process="@form" update="@form" />
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+		<h:form id="frmLista">
+			<p:growl />
+			<p:dataTable id="listaOperador" value="#{operadorMB.operadores}"
+				var="op" filteredValue="#{operadorMB.operadoresFiltrados}"
+				widgetVar="lstOperadores">
+				<f:facet name="header">
+					<p:outputLabel value="Selecione o Operador de Caixa" />
+				</f:facet>
+				<p:column filterBy="#{op.id}" headerText="Id" footerText="contains"
+					style="width:10%" filterMatchMode="contains">
+					<h:outputText value="#{op.id}" />
+				</p:column>
+				<p:column filterBy="#{op.nome}" headerText="Nome"
+					footerText="contains" filterMatchMode="contains">
+					<h:outputText value="#{op.nome}" />
+				</p:column>
+				<p:column headerText="Selecione" style="width:20%">
+					<p:commandButton title="Selecionar" icon="ui-icon-arrowthick-1-e"
+						action="#{caixaMB.abrirCaixa()}" process="@form" update="@form">
+						<f:setPropertyActionListener target="#{caixaMB.operador}"
+							value="#{op}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

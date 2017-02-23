@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/templates/basePrincipal.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton value="Cancelar" icon="ui-icon-cancel"
+						action="listar.jsf" process="@form" />
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		<h:form prependId="false" id="frmCadOperador">
+			<p:panel id="painel" header="Cadastro de Operadores">
+				<p:growl />
+				<h:panelGrid id="panelBasico" columns="3" cellpadding="5">
+					<p:outputLabel value="Nome: * " />
+					<p:inputText id="nome" value="#{operadorMB.operador.nome}"
+						size="80" maxlength="80" required="true"
+						requiredMessage="Nome é obrigatório">
+						<f:validateLength minimum="6" />
+					</p:inputText>
+					<p:message for="nome" id="msgnome" display="icon" />
+					<p:outputLabel value="CPF: * " />
+					<p:inputMask id="cpf" mask="999.999.999-99" maxlength="14"
+						size="14" value="#{operadorMB.operador.cpf}" required="true"
+						requiredMessage="CPF é obrigatório">
+						<f:validateLength minimum="14" />
+					</p:inputMask>
+					<p:message for="cpf" id="msgcpf" display="icon" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelCEP" columns="3" cellpadding="5">
+					<p:outputLabel value="CEP: " />
+					<p:inputMask id="cep" mask="99999-999"
+						value="#{operadorMB.operador.cep}" maxlength="10" size="10">
+					</p:inputMask>
+					<p:commandButton value="Buscar" id="btnBuscar" process="@form"
+						update="frmCadOperador" action="#{operadorMB.buscarEnderecoCEP()}" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelEndereco" columns="3" cellpadding="5">
+					<p:outputLabel value="Logradouro: " />
+					<p:inputText id="logradouro"
+						value="#{operadorMB.operador.logradouro}" size="80" maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="numero: " />
+					<p:inputText id="numero" value="#{operadorMB.operador.numero}"
+						size="10" maxlength="10" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Bairro: " />
+					<p:inputText id="bairro" value="#{operadorMB.operador.bairro}"
+						size="80" maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Cidade: " />
+					<p:inputText id="cidade" value="#{operadorMB.operador.cidade}"
+						size="80" maxlength="80" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="UF: " />
+					<p:inputText id="uf" value="#{operadorMB.operador.uf}" size="2"
+						maxlength="2" />
+					<p:outputLabel value="" />
+				</h:panelGrid>
+				<p:separator />
+				<h:panelGrid id="panelContato" columns="3" cellpadding="5">
+					<p:outputLabel value="Telefone: " />
+					<p:inputMask id="tel" mask="(99) 99999999?9"
+						value="#{operadorMB.operador.telefone}" size="12" maxlength="12" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Celular: " />
+					<p:inputMask id="cel" mask="(99) 99999999?9"
+						value="#{operadorMB.operador.celular}" size="12" maxlength="12" />
+					<p:outputLabel value="" />
+				</h:panelGrid>
+				<p:commandButton action="#{operadorMB.save()}" value="Salvar"
+					update="painel" icon="ui-icon-check" />
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

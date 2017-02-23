@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/templates/basePrincipal.xhtml">
+
+	<ui:define name="content">
+		<h:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton value="Novo" icon="ui-icon-document"
+						action="cadastrar" process="@form" />
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		<h:form prependId="false" id="frmGerentes">
+			<p:growl />
+			<p:dataTable value="#{gerenteMB.gerentes}" var="g" paginator="true"
+				 emptyMessage="Nenhum Gerente cadastrado" rows="10">
+				<p:column headerText="ID" style="width:10%">
+					<h:outputText value="#{g.id}" />
+				</p:column>
+				<p:column headerText="Nome:" style="width:40%">
+					<h:outputText value="#{g.nome}" />
+				</p:column>
+				<p:column headerText="CPF">
+					<h:outputText value="#{g.cpf}" />
+				</p:column>
+				<p:column headerText="Ações">
+					<p:commandButton title="Editar" icon="ui-icon-pencil"
+						oncomplete="PF('edGerente').show()" update="frmCadGerente" process="@form">
+						<f:setPropertyActionListener value="#{g}"
+							target="#{gerenteMB.gerente}" />
+					</p:commandButton>
+					<p:commandButton title="Remover" icon="ui-icon-trash"
+						action="#{gerenteMB.remove()}" process="@form" update="@form">
+						<f:setPropertyActionListener target="#{gerenteMB.gerente}"
+							value="#{g}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<p:dialog id="edicaoGerente" widgetVar="edGerente" width="1150"
+			height="750">
+			<h:form prependId="false" id="frmCadGerente">
+				<p:panel id="painel" header="Cadastro de Gerentes">
+					<p:growl />
+					<h:panelGrid id="panelBasico" columns="3" cellpadding="5">
+						<p:outputLabel value="Nome: * " />
+						<p:inputText id="nome" value="#{gerenteMB.gerente.nome}" size="80"
+							maxlength="80" required="true"
+							requiredMessage="Nome é obrigatório">
+							<f:validateLength minimum="6" />
+						</p:inputText>
+						<p:message for="nome" id="msgnome" display="icon" />
+						<p:outputLabel value="CPF: * " />
+						<p:inputMask id="cpf" mask="999.999.999-99" maxlength="14"
+							size="14" value="#{gerenteMB.gerente.cpf}" required="true"
+							requiredMessage="CPF é obrigatório">
+							<f:validateLength minimum="14" />
+						</p:inputMask>
+						<p:message for="cpf" id="msgcpf" display="icon" />
+					</h:panelGrid>
+					<p:separator />
+					<h:panelGrid id="panelCEP" columns="3" cellpadding="5">
+						<p:outputLabel value="CEP: " />
+						<p:inputMask id="cep" mask="99999-999"
+							value="#{gerenteMB.gerente.cep}" maxlength="10" size="10">
+						</p:inputMask>
+						<p:commandButton value="Buscar" id="btnBuscar" process="@form"
+							update="frmCadGerente" action="#{gerenteMB.buscarEnderecoCEP()}" />
+					</h:panelGrid>
+					<p:separator />
+					<h:panelGrid id="panelEndereco" columns="3" cellpadding="5">
+						<p:outputLabel value="Logradouro: " />
+						<p:inputText id="logradouro"
+							value="#{gerenteMB.gerente.logradouro}" size="80" maxlength="80" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="numero: " />
+						<p:inputText id="numero" value="#{gerenteMB.gerente.numero}"
+							size="10" maxlength="10" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="Bairro: " />
+						<p:inputText id="bairro" value="#{gerenteMB.gerente.bairro}"
+							size="80" maxlength="80" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="Cidade: " />
+						<p:inputText id="cidade" value="#{gerenteMB.gerente.cidade}"
+							size="80" maxlength="80" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="UF: " />
+						<p:inputText id="uf" value="#{gerenteMB.gerente.uf}" size="2"
+							maxlength="2" />
+						<p:outputLabel value="" />
+					</h:panelGrid>
+					<p:separator />
+					<h:panelGrid id="panelContato" columns="3" cellpadding="5">
+						<p:outputLabel value="Telefone: " />
+						<p:inputMask id="tel" mask="(99) 99999999?9"
+							value="#{gerenteMB.gerente.telefone}" size="12" maxlength="12" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="Celular: " />
+						<p:inputMask id="cel" mask="(99) 99999999?9"
+							value="#{gerenteMB.gerente.celular}" size="12" maxlength="12" />
+						<p:outputLabel value="" />
+					</h:panelGrid>
+					<p:commandButton action="#{gerenteMB.update()}" value="Salvar" 
+						update=":frmGerentes" icon="ui-icon-check"  oncomplete="PF('edGerente').hide()"/>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+
+</html>

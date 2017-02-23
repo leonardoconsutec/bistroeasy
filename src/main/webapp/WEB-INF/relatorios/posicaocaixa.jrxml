@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-02-17T15:39:51 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="posicaocaixa" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="96867fd3-ec2a-4a10-b39d-c42d83467b61">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="dinheiro" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[dinheiro]]></fieldDescription>
+	</field>
+	<field name="cartao" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[cartao]]></fieldDescription>
+	</field>
+	<field name="convenio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[convenio]]></fieldDescription>
+	</field>
+	<field name="cheque" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[cheque]]></fieldDescription>
+	</field>
+	<variable name="TotalizaValores" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{cheque}.add( $F{convenio}).add($F{cartao}).add($F{dinheiro})]]></variableExpression>
+	</variable>
+	<variable name="DataAtual" class="java.lang.String">
+		<initialValueExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())]]></initialValueExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="9d87557e-b979-44e1-b740-143ba6f35868"/>
+				<staticText>
+					<reportElement x="20" y="10" width="339" height="43" forecolor="#FFFFFF" uuid="8c192a1b-1a71-4008-98d6-26991cd3ea77"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Resumo caixa]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="20" y="60" width="60" height="20" forecolor="#FFFFFF" uuid="db105dbe-4b7b-4234-ac13-0ec5e5c88186"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Data:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="70" y="55" width="190" height="30" forecolor="#FFFFFF" uuid="1196df54-1b06-4b11-9c86-516f42954b99"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{DataAtual}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="38">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="38" backcolor="#FFFF33" uuid="16ea1835-6a45-4242-9ebf-d49853112093"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="4" width="120" height="30" uuid="c8d7e6a5-fe8e-4eeb-9344-89dc8770a02b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Pagamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="4" width="110" height="30" uuid="a9fbfa63-25d5-4dd8-842a-5a80633540bc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="178">
+			<textField>
+				<reportElement x="100" y="10" width="100" height="30" uuid="e62c6e27-bd66-405c-b20b-ae3a23a41241"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dinheiro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="10" width="90" height="30" uuid="7f3bb4e9-67fc-4ad6-9846-2db4f5dcd1e2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dinheiro:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="40" width="100" height="30" uuid="347d43d1-ee62-4820-a4cb-92f10b0464b6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cartao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="40" width="90" height="30" uuid="3a2ad6f3-cf3d-4c77-9808-f3448084edd0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cartao:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="70" width="100" height="30" uuid="fb25f01d-2393-4930-8fd9-6b97d6e5591a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="70" width="90" height="30" uuid="0c0109a8-326d-42a8-84f6-974295861981"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cheque:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="100" width="100" height="30" uuid="7ef0add0-0508-481a-903d-ee24a86932b0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{convenio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="100" width="90" height="30" uuid="e972cc5e-094d-428a-a1ab-cace0c2a1415"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Convenio:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="10" width="555" height="1" forecolor="#666666" uuid="162009b0-3841-415c-9182-310fcdea8268"/>
+			</line>
+			<textField>
+				<reportElement x="100" y="138" width="100" height="30" forecolor="#F20511" uuid="b92dc73c-2166-4fd0-8f1b-ee9ae91e4889"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalizaValores}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="137" width="555" height="1" forecolor="#666666" uuid="3b3aa80d-dff1-456c-b012-55e17d8fe00a"/>
+			</line>
+			<staticText>
+				<reportElement x="20" y="140" width="80" height="30" uuid="7458d88a-358d-4f72-badc-5aea1a1d0c66"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+</jasperReport>

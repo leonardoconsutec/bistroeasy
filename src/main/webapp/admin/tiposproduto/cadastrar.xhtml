@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/templates/basePrincipal.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton value="Cancelar" icon="ui-icon-cancel"
+						action="listar.jsf" process="@form" />
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		<h:form prependId="false" id="frmCadTipo">
+			<p:panel id="painel" header="Cadastro de Tipos de Produto">
+				<p:growl />
+				<h:panelGrid columns="3" cellpadding="5">
+					<p:outputLabel value="Descrição: * " />
+					<p:inputText id="descricao"
+						value="#{tipoProdutoMB.tipoProduto.descricao}" size="60"
+						maxlength="60" required="true"
+						requiredMessage="Descrição é obrigatória">
+						<f:validateLength minimum="5" />
+					</p:inputText>
+					<p:message for="descricao" id="msgdesc" display="icon" />
+				</h:panelGrid>
+				<p:commandButton action="#{tipoProdutoMB.save()}" value="Salvar"
+					update="@form" icon="ui-icon-check" />
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

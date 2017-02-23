@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/templates/basePrincipal.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton value="Novo" icon="ui-icon-document"
+						action="cadastrar" process="@form" />
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		<h:form prependId="false" id="frmMesas">
+			<p:growl />
+			<p:dataTable value="#{mesaMB.mesas}" var="m" paginator="true"
+				emptyMessage="Nenhuma Mesa cadastrada para essa Loja" rows="10">
+				<p:column headerText="ID Cadastro: " style="width:15%">
+					<h:outputText value="#{m.id}" />
+				</p:column>
+				<p:column headerText="Numero Mesa:" style="width:50%">
+					<h:outputText value="#{m.sequencial}" />
+				</p:column>
+				<p:column headerText="Ações">
+					<p:commandButton title="Remover" icon="ui-icon-trash"
+						action="#{mesaMB.remove()}" process="@form" update="@form">
+						<f:setPropertyActionListener target="#{mesaMB.mesa}"
+							value="#{m}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

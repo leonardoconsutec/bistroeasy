@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/templates/basePrincipal.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton value="Novo" icon="ui-icon-document"
+						action="cadastrar" process="@form" />
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		<h:form prependId="false" id="frmTipos">
+			<p:growl />
+			<p:dataTable value="#{tipoProdutoMB.tiposProduto}" var="t"
+				paginator="true" emptyMessage="Nenhum Tipo de Produto cadastrado" rows="10" >
+				<p:column headerText="ID" style="width:15%">
+					<h:outputText value="#{t.id}" />
+				</p:column>
+				<p:column headerText="Descrição" style="width:50%">
+					<h:outputText value="#{t.descricao}" />
+				</p:column>
+				<p:column headerText="Ações">
+					<p:commandButton title="Editar" icon="ui-icon-pencil"
+					   update=":frmCadTipo" oncomplete="PF('edTipo').show()">
+						<f:setPropertyActionListener value="#{t}"
+							target="#{tipoProdutoMB.tipoProduto}" />
+					</p:commandButton>
+					<p:commandButton title="Remover" icon="ui-icon-trash"
+						action="#{tipoProdutoMB.remove()}" process="@form" update="@form">
+						<f:setPropertyActionListener target="#{tipoProdutoMB.tipoProduto}"
+							value="#{t}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<p:dialog id="edicaoTipo" widgetVar="edTipo" width="1000" height="300">
+			<h:form prependId="false" id="frmCadTipo">
+				<p:panel id="painel" header="Cadastro de Tipos de Produto">
+					<p:growl />
+					<h:panelGrid columns="3" cellpadding="5">
+						<p:outputLabel value="Descrição: * " />
+						<p:inputText id="descricao"
+							value="#{tipoProdutoMB.tipoProduto.descricao}" size="60"
+							maxlength="60" required="true"
+							requiredMessage="Descrição é obrigatória">
+							<f:validateLength minimum="5" />
+						</p:inputText>
+						<p:message for="descricao" id="msgdesc" display="icon" />
+					</h:panelGrid>
+					<p:commandButton action="#{tipoProdutoMB.update()}" value="Salvar" process="@form"
+						update=":frmTipos" icon="ui-icon-check" oncomplete="PF('edTipo').hide()" />
+				</p:panel>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+
+</html>
