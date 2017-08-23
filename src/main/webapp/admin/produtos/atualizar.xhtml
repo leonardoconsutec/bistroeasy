@@ -46,14 +46,14 @@
 					<p:outputLabel value="" />
 					<p:outputLabel value="Acompanhamentos: " />
 					<p:inputText id="acompanhamentos"
-						value="#{produtoMB.produto.acompanhamentos}" size="80"
-						maxlength="80" />
+						value="#{produtoMB.produto.acompanhamentos}" size="70"
+						maxlength="70" />
 					<p:outputLabel value="" />
 					<p:outputLabel value="Serve: " />
 					<p:spinner id="serve" value="#{produtoMB.produto.serve}" min="0" />
 					<p:outputLabel value="" />
 				</h:panelGrid>
-				<p:commandButton action="#{produtoMB.save()}" value="Salvar"
+				<p:commandButton action="#{produtoMB.update()}" value="Salvar"
 					update="@form" icon="ui-icon-check" />
 			</p:panel>
 		</h:form>

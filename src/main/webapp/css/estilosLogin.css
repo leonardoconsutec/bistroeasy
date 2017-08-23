@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+/* Header
+-----------------------------------------------------------------------------*/
+.top {
+	height: 150px;
+	background: #F5FFFA;
+}
+/* Middle
+-----------------------------------------------------------------------------*/
+.content {
+	
+}
+
+/* Footer
+-----------------------------------------------------------------------------*/
+.footer {
+	height: 100px;
+	background:  	#AFEEEE;
+}
+.painelLogin{
+	width:400px;
+	height: 200px;
+	margin-left: auto;
+	margin-right: auto;
+}

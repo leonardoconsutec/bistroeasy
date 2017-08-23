@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -35,13 +37,26 @@ public class GerenteMB implements Serializable{
 	@PostConstruct
 	private void init(){
 		gerente = new Gerente();
+		inicializaGerente();
+	}
+	
+	public void inicializaGerente(){
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String id = request.getParameter("id");
+		if(id != null){
+		   gerente = gerenteDAO.findByid(Long.valueOf(id));
+		}
+	}
+	
+	public String editar(){
+		return "atualizar.jsf?faces-redirect=true&id="+gerente.getId();
 	}
 	
 	public String save() {
 		try {
 			gerenteDAO.save(gerente);
 			FacesMessageUtils.info("Gerente adicionado com sucesso!");
-			return "listar";
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não foi possível adicionar o Gerente");
@@ -49,13 +64,15 @@ public class GerenteMB implements Serializable{
 		}
 	}
 
-	public void update() {
+	public String update() {
 		try {
 			gerente = gerenteDAO.update(gerente);
 			FacesMessageUtils.info("Gerente Atualizado com sucesso!");
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não foi possivel atualizar o gerente!");
+			return null;
 		}
 	}
 

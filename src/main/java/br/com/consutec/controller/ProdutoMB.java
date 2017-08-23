@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import com.xpert.faces.utils.FacesMessageUtils;
 
@@ -30,13 +32,27 @@ public class ProdutoMB implements Serializable{
 	@PostConstruct
 	private void init(){
 		produto = new Produto();
+		inicializaProduto();
 	}
+	
+	public void inicializaProduto(){
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String id = request.getParameter("id");
+		if(id != null){
+		   produto = produtoDAO.findByid(Long.valueOf(id));
+		}
+	}
+	
+	public String editar(){
+		return "atualizar.jsf?faces-redirect=true&id="+produto.getId();
+	}
+	
 	
 	public String save() {
 		try {
 			produtoDAO.save(produto);
 			FacesMessageUtils.info("Produto adicionado com sucesso!");
-			return "listar";
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não Foi possivel adicionar o Produto");
@@ -44,13 +60,15 @@ public class ProdutoMB implements Serializable{
 		}
 	}
 
-	public void update() {
+	public String update() {
 		try {
 			produto = produtoDAO.update(produto);
 			FacesMessageUtils.info("produto atualizado com sucesso!");
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não foi possível atualizar o Produto");
+			return null;
 		}
 	}
 

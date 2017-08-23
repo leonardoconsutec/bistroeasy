@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -37,13 +39,26 @@ public class OperadorMB implements Serializable{
 	@PostConstruct
 	private void init(){
 		operador = new Operador();
+		inicializaOperador();
 	}
 
+	public void inicializaOperador(){
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String id = request.getParameter("id");
+		if(id != null){
+		   operador = operadorDAO.findByid(Long.valueOf(id));
+		}
+	}
+	
+	public String editar(){
+		return "atualizar.jsf?faces-redirect=true&id="+operador.getId();
+	}
+	
 	public String save() {
 		try {
 			operadorDAO.save(operador);
 			FacesMessageUtils.info("Operador adicionado com sucesso!");
-			return "listar";
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não foi possível adicionar o Operador");
@@ -51,13 +66,15 @@ public class OperadorMB implements Serializable{
 		}
 	}
 
-	public void update() {
+	public String update() {
 		try {
 			operador = operadorDAO.update(operador);
 			FacesMessageUtils.info("Operador Atualizado com sucesso!");
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não foi possivel atualizar o operador!");
+			return null;
 		}
 	}
 

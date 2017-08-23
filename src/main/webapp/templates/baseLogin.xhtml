@@ -3,36 +3,17 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
-
+	xmlns:p="http://java.sun.com/jsf/html">
 <h:head>
-	<title>BistrôEasy</title>
+	<link rel="stylesheet" href="css/estilosLogin.css" type="text/css" />
+	<title>BistrôEasy v0.1(Beta)</title>
 </h:head>
 <body>
-	<p:layout fullPage="true">
-
-		<p:layoutUnit position="north" size="100"
-			resizable="false" closable="false" collapsible="false">
-			<center>
-			<p:outputLabel value="BISTRÔEASY" style="font-size:xx-large"/>
-			</center>
-		</p:layoutUnit>
-
-		<p:layoutUnit position="west" size="500" 
-			resizable="false" closable="false" collapsible="false">
-			
-		</p:layoutUnit>
-
-		<p:layoutUnit position="east" size="500" 
-			resizable="false" closable="false" collapsible="false" effect="fale">
-			
-		</p:layoutUnit>
-
-		<p:layoutUnit position="center">
-			<ui:insert name="content">Content Básico</ui:insert>
-		</p:layoutUnit>
-
-
-	</p:layout>
+	<div class="top">
+		<ui:insert name="Top"></ui:insert>
+	</div>
+	<div class="content">
+		<ui:insert name="content"></ui:insert>
+	</div>
 </body>
 </html>

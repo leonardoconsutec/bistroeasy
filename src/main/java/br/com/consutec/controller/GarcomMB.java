@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -36,13 +38,26 @@ public class GarcomMB implements Serializable{
 	@PostConstruct
 	public void init(){
 		garcom = new Garcom();
+		inicializaGarcom();
+	}
+	
+	public void inicializaGarcom(){
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String id = request.getParameter("id");
+		if(id != null){
+		   garcom = garcomDAO.findByid(Long.valueOf(id));
+		}
+	}
+	
+	public String editar(){
+		return "atualizar.jsf?faces-redirect=true&id="+garcom.getId();
 	}
 	
 	public String save() {
 		try {
 			garcomDAO.save(garcom);
 			FacesMessageUtils.info("Garçon adicionado com sucesso!");
-			return "listar";
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não foi possível adicionar o Garçon");
@@ -50,13 +65,15 @@ public class GarcomMB implements Serializable{
 		}
 	}
 
-	public void update() {
+	public String update() {
 		try {
 			garcom = garcomDAO.update(garcom);
 			FacesMessageUtils.info("Garçon Atualizado com sucesso!");
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não foi possivel atualizar o garçon!");
+			return null;
 		}
 	}
 

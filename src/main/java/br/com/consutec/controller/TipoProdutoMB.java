@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import com.xpert.faces.utils.FacesMessageUtils;
 
@@ -31,26 +33,41 @@ public class TipoProdutoMB implements Serializable{
 	@PostConstruct
 	public void init(){
 		tipoProduto = new TipoProduto();
+		inicializaTipoProduto();
+	}
+	
+	public void inicializaTipoProduto(){
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String id = request.getParameter("id");
+		if(id != null){
+		   tipoProduto = tipoProdutoDAO.findByid(Long.valueOf(id));
+		}
+	}
+	
+	public String editar(){
+		return "atualizar.jsf?faces-redirect=true&id="+tipoProduto.getId();
 	}
 
 	public String save(){
 		try {
 			tipoProdutoDAO.save(tipoProduto);
 			FacesMessageUtils.info("Tipo adicionado com sucesso!");
-			return "listar";
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não Foi possivel adicionar a Tipo");
 			return null;
 		}
 	}
-	public void update(){
+	public String update(){
 		try {
 			tipoProdutoDAO.update(tipoProduto);
 			FacesMessageUtils.info("Tipo atualizado com sucesso!");
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não Foi possivel atualizar o Tipo");
+			return null;
 		}
 		
 	}
@@ -80,7 +97,4 @@ public class TipoProdutoMB implements Serializable{
 	public void setTiposProduto(List<TipoProduto> tiposProduto) {
 		this.tiposProduto = tiposProduto;
 	}
-	
-	
-	
 }

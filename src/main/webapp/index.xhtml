@@ -1,20 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
-
-<h:head>
-	<title>BistroEasy</title>
-</h:head>
-<body>
-	<ui:composition template="/templates/baseLogin.xhtml">
+	<ui:composition 
+	    template="/templates/baseLogin.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui">
 		<ui:define name="content">
 			<h:form id="frmLogin">
 				<p:messages />
-				<p:panel>
-					<center>
+				<p:panel styleClass="painelLogin">
 						<h:panelGrid columns="2">
 							<p:outputLabel value="Login:" />
 							<p:inputText value="#{sessaoMB.login}" />
@@ -37,7 +31,6 @@
 							<p:commandButton value="Entrar" action="#{sessaoMB.logar()}"
 								update="frmLogin" />
 						</h:panelGrid>
-					</center>
 				</p:panel>
 			</h:form>
 			<p:dialog id="dialogLicenca" widgetVar="licenca" appendTo="@(body)"
@@ -56,12 +49,11 @@
 							<p:outputLabel value="Chave:" />
 							<p:inputText value="#{sessaoMB.chave}" />
 							<p:commandButton value="Entrar"
-								action="#{sessaoMB.salvarLicenca()}" update=":frmLogin" process="frmLicenca"/>
+								action="#{sessaoMB.salvarLicenca()}" update=":frmLogin"
+								process="frmLicenca" />
 						</p:panelGrid>
 					</p:panel>
 				</h:form>
 			</p:dialog>
 		</ui:define>
 	</ui:composition>
-</body>
-</html>

@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -54,6 +55,7 @@ public class ContaMB implements Serializable {
 	private Garcom garcom;
 	private ItemConta itemConta;
 	private BigDecimal idprd;
+	private String descricaoProd = "";
 	private BigDecimal mesaTroca;
 	private Pagamento pagamento;
 	private BigDecimal totalPago;
@@ -104,59 +106,65 @@ public class ContaMB implements Serializable {
 		troco = BigDecimal.ZERO;
 	}
 
-	public void verificaMesa() {
+	public String verificaMesa() {
 		try {
 			caixa = caixaDAO.findbyLoja(sessao.getLojaSelecionada());
 			if (caixa == null) {
 				FacesMessageUtils.info("O caixa não está aberto!");
+				return null;
 			} else {
 				Long seq = mesa.getSequencial();
 				mesa = mesaDAO.findMesaLoja(sessao.getLojaSelecionada(), seq);
 				if (mesa.getStatus() == 0) {
 					RequestContext.getCurrentInstance().execute("PF('dialogAbrirMesa').show();");
+					return null;
 				} else {
-					conta = contaDAO.findbyMesa(mesa);
-					itensConta = itemContaDAO.listarPorConta(conta);
-					pagamentos = pagamentoDAO.listarPorConta(conta);
-					conta.setItens(itensConta);
-					conta.setPagamentos(pagamentos);
-					calculaTotalPago();
-					calculaTroco();
-					RequestContext.getCurrentInstance().execute("PF('detalhes').show();");
+					return "detalhes?id="+mesa.getId()+"&faces-redirect=true";
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return "detalhes?id="+mesa.getId()+"&faces-redirect=true";
 		}
 	}
+	
+	public void inicializaMesa(){
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String id = request.getParameter("id");
+		mesa = mesaDAO.findByid(Long.valueOf(id));
+		conta = contaDAO.findbyMesa(mesa);
+		itensConta = itemContaDAO.listarPorConta(conta);
+		pagamentos = pagamentoDAO.listarPorConta(conta);
+		conta.setItens(itensConta);
+		conta.setPagamentos(pagamentos);
+		calculaTotalPago();
+		calculaTroco();
+	}
 
-	public void verificaMesa(String id) {
+	public String verificaMesa(String id) {
 		try {
 			caixa = caixaDAO.findbyLoja(sessao.getLojaSelecionada());
 			if (caixa == null) {
 				FacesMessageUtils.info("O caixa não está aberto!");
+				return null;
 			} else {
 				Long idenviado = Long.valueOf(id);
 				mesa = mesaDAO.findByid(idenviado);
 				if (mesa.getStatus() == 0) {
 					RequestContext.getCurrentInstance().execute("PF('dialogAbrirMesa').show();");
+					return null;
 				} else {
-					conta = contaDAO.findbyMesa(mesa);
-					itensConta = itemContaDAO.listarPorConta(conta);
-					pagamentos = pagamentoDAO.listarPorConta(conta);
-					conta.setItens(itensConta);
-					conta.setPagamentos(pagamentos);
-					calculaTotalPago();
-					calculaTroco();
-					RequestContext.getCurrentInstance().execute("PF('detalhes').show();");
+					//RequestContext.getCurrentInstance().execute("PF('detalhes').show();");
+					return "detalhes?id="+mesa.getId()+"&faces-redirect=true";
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 
-	public void abrirMesa() {
+	public String abrirMesa() {
 		try {
 			RequestContext.getCurrentInstance().execute("PF('dialogAbrirMesa').hide();");
 			conta = new Conta();
@@ -178,9 +186,11 @@ public class ContaMB implements Serializable {
 			contaDAO.save(conta);
 			mesaDAO.update(mesa);
 			atualizarListaMesas();
-			RequestContext.getCurrentInstance().execute("PF('detalhes').show();");
+			//RequestContext.getCurrentInstance().execute("PF('detalhes').show();");
+			return "detalhes?id="+mesa.getId()+"&faces-redirect=true";
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível Abrir a mesa");
+			return null;
 		}
 
 	}
@@ -346,7 +356,16 @@ public class ContaMB implements Serializable {
 		}
 	}
 
-	public void adicionarItemConta() {
+	public void buscarProduto(){
+		try {
+			produto = produtoDAO.findByid(idprd.longValue());
+			descricaoProd = produto.getDescricao();
+		} catch (Exception e) {
+			descricaoProd = "Nenhum produto encontrado";
+			FacesMessageUtils.error("produto não encontrado");
+		}
+	}
+	public String adicionarItemConta() {
 		try {
 			produto = produtoDAO.findByid(idprd.longValue());
 			itemConta.setConta(conta);
@@ -373,14 +392,19 @@ public class ContaMB implements Serializable {
 			itemConta.setQuantidade(BigDecimal.ONE);
 			itensConta = itemContaDAO.listarPorConta(conta);
 			idprd=null;
-			FacesMessageUtils.info("Item adicionado sucesso!");
+			FacesContext fc = FacesContext.getCurrentInstance();
+			FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO,"Item adicionado com sucesso!","Item adicionado com sucesso!");
+			fc.addMessage("",fm);
+			fc.getExternalContext().getFlash().setKeepMessages(true);
+			return "detalhes.jsf?id="+conta.getMesa().getId()+"&faces-redirect=true";
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível adicionar o item!");
 			e.printStackTrace();
+			return null;
 		}
 	}
 
-	public void removerItemConta() {
+	public String removerItemConta() {
 		try {
 			System.out.println("Teste");
 			BigDecimal valorRemovido = BigDecimal.ZERO;
@@ -401,10 +425,15 @@ public class ContaMB implements Serializable {
 			conta.setItens(itensConta);
 			conta.getItens().remove(itemConta);
 			contaDAO.update(conta);
-			FacesMessageUtils.info("Item Removido com sucesso!");
+			FacesContext fc = FacesContext.getCurrentInstance();
+			FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO,"Removido com sucesso!","Removido com sucesso!");
+			fc.addMessage("",fm);
+			fc.getExternalContext().getFlash().setKeepMessages(true);
+			return "detalhes.jsf?id="+conta.getMesa().getId()+"&faces-redirect=true";
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível remover o item!");
 			e.printStackTrace();
+			return null;
 		}
 
 	}
@@ -559,6 +588,14 @@ public class ContaMB implements Serializable {
 
 	public void setTroco(BigDecimal troco) {
 		this.troco = troco;
+	}
+
+	public String getDescricaoProd() {
+		return descricaoProd;
+	}
+
+	public void setDescricaoProd(String descricaoProd) {
+		this.descricaoProd = descricaoProd;
 	}
 
 }

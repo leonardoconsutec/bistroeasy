@@ -7,11 +7,14 @@
 
 <ui:composition template="/templates/basePrincipal.xhtml">
 	<ui:define name="content">
-
+		<h:form>
+			<p:hotkey bind="esc"
+				action="/admin/main/index.jsf?faces-redirect=true" />
+		</h:form>
 		<h:form id="frmSelecaoMesa">
 			<p:growl />
 			<p:panel>
-			   <p:focus for="inputMesa"/>
+				<p:focus for="inputMesa" />
 				<p:outputLabel value="Mesa: " />
 				<p:spacer width="10" />
 				<p:inputNumber id="inputMesa" decimalPlaces="0" minValue="1"
@@ -20,7 +23,7 @@
 				<p:spacer width="10" />
 				<p:commandButton title="Selecionar" value="Selecionar"
 					action="#{contaMB.verificaMesa()}" icon="ui-icon-check"
-					process="@form" update=":detalhesMesa">
+					process="@form">
 				</p:commandButton>
 			</p:panel>
 			<h:panelGrid columns="10" binding="#{gestaoMesasMB.grid}">
@@ -30,7 +33,7 @@
 		<p:dialog id="dialogAbreMesa" showEffect="fade" hideEffect="fade"
 			modal="true" appendTo="@(body)" widgetVar="dialogAbrirMesa"
 			width="500" height="500" header="Alerta!" resizable="false"
-			draggable="false" focus=":frmLancamentos:codprd">
+			draggable="false" >
 			<h:form id="frmAbrirMesa">
 				<p:outputLabel value="A mesa está fechada deseja abri-la?" />
 				<br />
@@ -43,7 +46,7 @@
 					<p:outputLabel value="" />
 					<p:commandButton value="Sim" styleClass="ui-confirmdialog-yes"
 						icon="ui-icon-check" action="#{contaMB.abrirMesa()}"
-						update=":detalhesMesa" process="@form" />
+						process="@form" />
 
 					<p:commandButton value="Não" styleClass="ui-confirmdialog-no"
 						icon="ui-icon-close" oncomplete="PF('dialogAbrirMesa').hide()"
@@ -62,8 +65,7 @@
 					</p:column>
 					<p:column headerText="Selecione" style="width:20%">
 						<p:commandButton title="Selecionar" icon="ui-icon-arrowthick-1-e"
-							action="#{contaMB.abrirMesa()}" process="@form"
-							update=":detalhesMesa">
+							action="#{contaMB.abrirMesa()}" process="@form">
 							<f:setPropertyActionListener target="#{contaMB.garcom}"
 								value="#{gar}" />
 						</p:commandButton>
@@ -73,145 +75,7 @@
 		</p:dialog>
 
 
-		<p:dialog id="detalhesMesa" widgetVar="detalhes" width="1200"
-			modal="true" height="900" appendTo="@(body)" resizable="false"
-			draggable="false" header="Detalhes da Mesa">
-
-			<p:growl />
-			<p:panelGrid class="ui-noborder">
-				<p:column style="vertical-align: top;">
-					<p:panel header="Resumo:">
-						<h:form id="frmDetalheMesaBotoes">
-						<p:focus for=":frmLancamentos:codprd"/>
-							<p:panelGrid id="Painelresumo" columns="2">
-								<p:outputLabel value="Mesa:" />
-								<p:outputLabel value="#{contaMB.mesa.sequencial}" />
-								<p:outputLabel value="Conta:" />
-								<p:outputLabel value="#{contaMB.conta.id}" />
-								<p:outputLabel value="Total Produtos:" />
-								<p:inputNumber value="#{contaMB.conta.totalProdutos}"
-									symbol="R$ " symbolPosition="p" decimalPlaces="2"
-									thousandSeparator="." decimalSeparator="," readonly="true"
-									size="10" onfocus="this.select();"/>
-								<p:outputLabel value="Taxa Serviço:" />
-								<p:inputNumber value="#{contaMB.conta.taxaServico}" symbol="R$ "
-									symbolPosition="p" decimalPlaces="2" thousandSeparator="."
-									decimalSeparator="," readonly="true" size="10" />
-								<p:outputLabel value="Total Conta:" />
-								<p:inputNumber value="#{contaMB.conta.valorTotal}" symbol="R$ "
-									symbolPosition="p" decimalPlaces="2" thousandSeparator="."
-									decimalSeparator="," readonly="true" size="10" />
-							</p:panelGrid>
-						</h:form>
-					</p:panel>
-					<p:panelGrid columns="1">
-						<h:form id="frmOpcoes">
-							<p:commandButton value="Trocar Mesa"
-								style="width:300px !important; height: 70px !important;"
-								onclick="PF('detalhes').hide();"
-								oncomplete="PF('trocaMesa').show();" process="@form" />
-							<p:commandButton value="Imprimir Conta"
-								style="width:300px !important; height: 70px !important;" 
-								action="#{contaMB.imprimeConta()}"
-								process="frmOpcoes" update="frmOpcoes" onclick="this.form.target='_blank'" ajax="false"/>
-							<p:commandButton value="Encerrar Conta"
-								style="width:300px !important; height: 70px !important;"
-								onclick="PF('detalhes').hide();"
-								action="#{contaMB.encerrarConta()}" process="@form"
-								update=":frmFechaConta" />
-							<p:commandButton value="Fechar Conta"
-								style="width:300px !important; height: 70px !important;"
-								onclick="PF('detalhes').hide();"
-								oncomplete="PF('fechaConta').show();" process="@form"
-								update=":frmFechaConta" />
-						</h:form>
-					</p:panelGrid>
-				</p:column>
-				<p:column>
-					<p:panel id="LancamentoItens" header="Lançamento de Itens">
-						<h:form id="frmLancamentos">
-							<p:panelGrid id="gridlancamentos" columns="5">
-								<p:outputLabel value="Produto:" />
-								<p:inputNumber id="codprd" value="#{contaMB.idprd}"
-									decimalPlaces="0" decimalSeparator="," thousandSeparator="."
-									emptyValue="0" size="8" />
-								<p:outputLabel value="Qtd" />
-								<p:inputNumber id="qtdprd" decimalPlaces="0"
-									decimalSeparator="," thousandSeparator="." emptyValue="1"
-									value="#{contaMB.itemConta.quantidade}" size="4" />
-								<p:commandButton value="Adicionar"
-									action="#{contaMB.adicionarItemConta()}"
-									process="frmLancamentos" update=":detalhesMesa"
-									oncomplete="PF('detalhes').show();" />
-							</p:panelGrid>
-						</h:form>
-
-						<p:separator />
-
-
-						<h:form id="frmlsprd">
-							<p:dataTable id="lstPrd" value="#{contaMB.produtos}"
-								paginator="true" rows="5"
-								filteredValue="#{contaMB.produtosFiltrados}" var="prd"
-								emptyMessage="Nenhum produto cadastrado!">
-								<f:facet name="header">
-									<h:outputText value="Cadastro de produtos" />
-								</f:facet>
-								<p:column headerText="Id" sortBy="#{prd.id}" style="width:10%">
-									<h:outputText value="#{prd.id}" />
-								</p:column>
-								<p:column filterBy="#{prd.descricao}" headerText="Descrição"
-									filterMatchMode="contains" sortBy="#{prd.descricao}"
-									filterStyle="width:80%">
-									<h:outputText value="#{prd.descricao}" />
-								</p:column>
-								<p:column headerText="Preço Unitário" style="width:20%">
-									<p:inputNumber value="#{prd.precoUnitario}"
-										thousandSeparator="." decimalSeparator="," size="10"
-										decimalPlaces="2" readonly="true" symbol="R$ "
-										symbolPosition="p" />
-								</p:column>
-							</p:dataTable>
-						</h:form>
-
-
-						<p:separator />
-
-
-						<h:form id="frmListaItems">
-							<p:growl />
-							<p:dataTable id="lstItens" value="#{contaMB.itensConta}"
-								paginator="true" rows="5" var="item"
-								emptyMessage="Nenhum Item lançado!">
-								<f:facet name="header">
-									<h:outputText value="Lista de Itens da Conta" />
-								</f:facet>
-								<p:column headerText="Descricao">
-									<p:outputLabel value="#{item.produto.descricao}" />
-								</p:column>
-								<p:column headerText="Qtd" style="width:15%">
-									<p:outputLabel value="#{item.quantidade}" />
-								</p:column>
-								<p:column headerText="Preço Unitário" style="width:20%">
-									<p:outputLabel value="#{item.valorUnitario}" />
-								</p:column>
-								<p:column headerText="Ações" style="width:10%">
-									<p:commandButton title="Remover" icon="ui-icon-trash"
-										action="#{contaMB.removerItemConta()}" process="frmListaItems"
-										update=":detalhesMesa" oncomplete="PF('detalhes').show();">
-										<f:setPropertyActionListener target="#{contaMB.itemConta}"
-											value="#{item}" />
-									</p:commandButton>
-								</p:column>
-							</p:dataTable>
-						</h:form>
-
-
-					</p:panel>
-				</p:column>
-			</p:panelGrid>
-
-		</p:dialog>
+		
 		<p:dialog id="dialogTroca" widgetVar="trocaMesa"
 			header="Troca de Mesas" width="400" height="110" modal="true"
 			appendTo="@(body)" resizable="false" draggable="false">
@@ -222,8 +86,8 @@
 					<p:inputNumber decimalPlaces="0" decimalSeparator="."
 						thousandSeparator="," size="4" value="#{contaMB.mesaTroca}" />
 					<p:commandButton value="Trocar" action="#{contaMB.trocarMesa()}"
-						process="@form"
-						update=":frmSelecaoMesa" oncomplete="PF('trocaMesa').hide();" />
+						process="@form" update=":frmSelecaoMesa"
+						oncomplete="PF('trocaMesa').hide();" />
 				</h:form>
 			</p:panelGrid>
 		</p:dialog>
@@ -296,7 +160,7 @@
 					<p:commandButton value="Fechar Conta"
 						action="#{contaMB.fecharMesa()}" process="frmFechaConta"
 						update="frmFechaConta"
-						style="width:300px !important; height: 70px !important;" 
+						style="width:300px !important; height: 70px !important;"
 						onclick="PF('fechaConta').hide();">
 						<p:confirm header="Confirmação" message="Tem certeza?"
 							icon="ui-icon-alert" />

@@ -12,10 +12,12 @@
 <ui:composition template="/templates/basePrincipal.xhtml">
 	<ui:define name="content">
 		<h:form>
+			<p:hotkey bind="esc"
+				action="/admin/main/index.jsf?faces-redirect=true" />
 			<p:toolbar>
 				<f:facet name="left">
 					<p:commandButton value="Novo" icon="ui-icon-document"
-						action="cadastrar" process="@form" />
+						action="cadastrar.jsf?faces-redirect=true" process="@form" />
 				</f:facet>
 			</p:toolbar>
 		</h:form>
@@ -32,8 +34,7 @@
 				<p:column headerText="Ações">
 					<p:commandButton title="Remover" icon="ui-icon-trash"
 						action="#{mesaMB.remove()}" process="@form" update="@form">
-						<f:setPropertyActionListener target="#{mesaMB.mesa}"
-							value="#{m}" />
+						<f:setPropertyActionListener target="#{mesaMB.mesa}" value="#{m}" />
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>

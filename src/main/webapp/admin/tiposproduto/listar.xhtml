@@ -12,17 +12,20 @@
 <ui:composition template="/templates/basePrincipal.xhtml">
 	<ui:define name="content">
 		<h:form>
+			<p:hotkey bind="esc"
+				action="/admin/main/index.jsf?faces-redirect=true" />
 			<p:toolbar>
 				<f:facet name="left">
 					<p:commandButton value="Novo" icon="ui-icon-document"
-						action="cadastrar" process="@form" />
+						action="cadastrar.jsf?faces-redirect=true" process="@form" />
 				</f:facet>
 			</p:toolbar>
 		</h:form>
 		<h:form prependId="false" id="frmTipos">
 			<p:growl />
 			<p:dataTable value="#{tipoProdutoMB.tiposProduto}" var="t"
-				paginator="true" emptyMessage="Nenhum Tipo de Produto cadastrado" rows="10" >
+				paginator="true" emptyMessage="Nenhum Tipo de Produto cadastrado"
+				rows="10">
 				<p:column headerText="ID" style="width:15%">
 					<h:outputText value="#{t.id}" />
 				</p:column>
@@ -31,7 +34,8 @@
 				</p:column>
 				<p:column headerText="Ações">
 					<p:commandButton title="Editar" icon="ui-icon-pencil"
-					   update=":frmCadTipo" oncomplete="PF('edTipo').show()">
+						action="#{tipoProdutoMB.editar()}" 
+						process="@form" >
 						<f:setPropertyActionListener value="#{t}"
 							target="#{tipoProdutoMB.tipoProduto}" />
 					</p:commandButton>
@@ -43,25 +47,6 @@
 				</p:column>
 			</p:dataTable>
 		</h:form>
-		<p:dialog id="edicaoTipo" widgetVar="edTipo" width="1000" height="300">
-			<h:form prependId="false" id="frmCadTipo">
-				<p:panel id="painel" header="Cadastro de Tipos de Produto">
-					<p:growl />
-					<h:panelGrid columns="3" cellpadding="5">
-						<p:outputLabel value="Descrição: * " />
-						<p:inputText id="descricao"
-							value="#{tipoProdutoMB.tipoProduto.descricao}" size="60"
-							maxlength="60" required="true"
-							requiredMessage="Descrição é obrigatória">
-							<f:validateLength minimum="5" />
-						</p:inputText>
-						<p:message for="descricao" id="msgdesc" display="icon" />
-					</h:panelGrid>
-					<p:commandButton action="#{tipoProdutoMB.update()}" value="Salvar" process="@form"
-						update=":frmTipos" icon="ui-icon-check" oncomplete="PF('edTipo').hide()" />
-				</p:panel>
-			</h:form>
-		</p:dialog>
 	</ui:define>
 </ui:composition>
 

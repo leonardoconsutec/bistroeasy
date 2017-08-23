@@ -43,7 +43,7 @@
 					<p:password id="senha" value="#{usuarioMB.usuario.senha}"
 						feedback="true" goodLabel="Boa" weakLabel="Fraca"
 						strongLabel="Forte" size="20" maxlength="20" required="true"
-						requiredMessage="Senha obrigatória">
+						requiredMessage="Senha obrigatória" redisplay="true">
 						<f:validateLength minimum="3" />
 					</p:password>
 					<p:message for="senha" id="msgsenha" display="icon" />
@@ -52,7 +52,7 @@
 						value="#{usuarioMB.usuario.ativo}" onLabel="Sim" offLabel="Não"
 						style="width:60px" />
 				</h:panelGrid>
-				<p:commandButton action="#{usuarioMB.save()}" value="Salvar"
+				<p:commandButton action="#{usuarioMB.update()}" value="Salvar"
 					update="painel" icon="ui-icon-check" />
 			</p:panel>
 		</h:form>

@@ -1,0 +1,167 @@
+<ui:composition template="/templates/basePrincipal.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="header">
+		<f:metadata>
+			<f:viewAction action="#{contaMB.inicializaMesa()}" />
+		</f:metadata>
+		<script type="text/javascript">
+	       function GetChar (event, id){
+               var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
+               if(chCode == 13){
+                  document.getElementById(id).focus();
+               }
+           }		    
+	    </script>
+	</ui:define>
+	<ui:define name="content">
+		<p:growl />
+		<h:form>
+			<p:hotkey bind="esc"
+				action="/admin/gestaomesas/listar.jsf?faces-redirect=true" />
+		</h:form>
+		<p:panelGrid class="ui-noborder">
+			<p:column style="vertical-align: top;">
+				<p:panel header="Resumo:">
+					<h:form id="frmDetalheMesaBotoes">
+						<p:panelGrid id="Painelresumo" columns="2">
+							<p:outputLabel value="Mesa:" />
+							<p:outputLabel value="#{contaMB.mesa.sequencial}" />
+							<p:outputLabel value="Conta:" />
+							<p:outputLabel value="#{contaMB.conta.id}" />
+							<p:outputLabel value="Total Produtos:" />
+							<p:inputNumber value="#{contaMB.conta.totalProdutos}"
+								symbol="R$ " symbolPosition="p" decimalPlaces="2"
+								thousandSeparator="." decimalSeparator="," readonly="true"
+								size="10" onfocus="this.select();" />
+							<p:outputLabel value="Taxa Serviço:" />
+							<p:inputNumber value="#{contaMB.conta.taxaServico}" symbol="R$ "
+								symbolPosition="p" decimalPlaces="2" thousandSeparator="."
+								decimalSeparator="," readonly="true" size="10" />
+							<p:outputLabel value="Total Conta:" />
+							<p:inputNumber value="#{contaMB.conta.valorTotal}" symbol="R$ "
+								symbolPosition="p" decimalPlaces="2" thousandSeparator="."
+								decimalSeparator="," readonly="true" size="10" />
+						</p:panelGrid>
+					</h:form>
+				</p:panel>
+				<p:panelGrid columns="1">
+					<h:form id="frmOpcoes">
+						<p:commandButton value="F7 - Trocar Mesa "
+							style="width:300px !important; height: 70px !important;"
+							process="@form" />
+						<p:commandButton value="F8 - Imprimir Conta"
+							style="width:300px !important; height: 70px !important;"
+							action="#{contaMB.imprimeConta()}" process="frmOpcoes"
+							update="frmOpcoes" onclick="this.form.target='_blank'"
+							ajax="false" />
+						<p:commandButton value="F9 - Encerrar Conta"
+							style="width:300px !important; height: 70px !important;"
+							action="#{contaMB.encerrarConta()}" process="@form" />
+						<p:commandButton value="F10 - Fechar Conta"
+							style="width:300px !important; height: 70px !important;"
+							process="@form" />
+						<p:commandButton value="ESC - Voltar"
+							style="width:300px !important; height: 70px !important;"
+							process="@form"
+							action="/admin/gestaomesas/listar.jsf?faces-redirect=true" />
+					</h:form>
+				</p:panelGrid>
+			</p:column>
+			<p:column>
+				<p:focus context="LancamentoItens" />
+				<p:panel id="LancamentoItens" header="Lançamento de Itens">
+
+					<h:form id="frmLancamentos" prependId="false"
+						onkeypress="if( event.keyCode == 13 ){return false}">
+						<p:panelGrid id="gridlancamentos" columns="3">
+							<p:outputLabel value="Produto:" />
+							<p:inputNumber id="codprd" value="#{contaMB.idprd}"
+								decimalPlaces="0" decimalSeparator="," thousandSeparator="."
+								emptyValue="0" size="8" onfocus="this.select();"
+								onkeypress="GetChar (event,'qtdprd');" onkeydown="if( event.keyCode == 27 ){window.location.replace('listar.jsf');}">
+								<p:ajax event="blur" update="descprd"
+									listener="#{contaMB.buscarProduto()}" />
+							</p:inputNumber>
+							<h:outputText value="#{contaMB.descricaoProd}" id="descprd" />
+							<p:outputLabel value="Qtd" />
+							<h:inputText value="#{contaMB.itemConta.quantidade}" id="qtdprd"
+								onfocus="this.select();" onkeypress="GetChar (event,'btnadd');"
+								size="4" onkeydown="if( event.keyCode == 27 ){window.location.replace('listar.jsf');}" >
+								<f:convertNumber maxFractionDigits="0" minFractionDigits="2" />
+								<f:validateDoubleRange />
+							</h:inputText>
+							<p:commandButton value="Adicionar" id="btnadd"
+								action="#{contaMB.adicionarItemConta()}"
+								onkeypress="if( event.keyCode == 13 ){this.click();}" />
+						</p:panelGrid>
+					</h:form>
+
+					<p:separator />
+
+
+					<h:form id="frmlsprd">
+						<p:dataTable id="lstPrd" value="#{contaMB.produtos}"
+							scrollable="true" scrollHeight="210"
+							filteredValue="#{contaMB.produtosFiltrados}" var="prd"
+							emptyMessage="Nenhum produto cadastrado!">
+							<f:facet name="header">
+								<h:outputText value="Cadastro de produtos" />
+							</f:facet>
+							<p:column headerText="Id" sortBy="#{prd.id}" style="width:10%">
+								<h:outputText value="#{prd.id}" />
+							</p:column>
+							<p:column filterBy="#{prd.descricao}" headerText="Descrição"
+								filterMatchMode="contains" sortBy="#{prd.descricao}"
+								filterStyle="width:80%">
+								<h:outputText value="#{prd.descricao}" />
+							</p:column>
+							<p:column headerText="Preço Unitário" style="width:20%">
+								<p:inputNumber value="#{prd.precoUnitario}"
+									thousandSeparator="." decimalSeparator="," size="10"
+									decimalPlaces="2" readonly="true" symbol="R$ "
+									symbolPosition="p" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+
+
+					<p:separator />
+
+
+					<h:form id="frmListaItems">
+						<p:growl />
+						<p:dataTable id="lstItens" value="#{contaMB.itensConta}"
+							var="item" scrollable="true" scrollHeight="210"
+							emptyMessage="Nenhum Item lançado!">
+							<f:facet name="header">
+								<h:outputText value="Lista de Itens da Conta" />
+							</f:facet>
+							<p:column headerText="Descricao">
+								<p:outputLabel value="#{item.produto.descricao}" />
+							</p:column>
+							<p:column headerText="Qtd" style="width:15%">
+								<p:outputLabel value="#{item.quantidade}" />
+							</p:column>
+							<p:column headerText="Preço Unitário" style="width:20%">
+								<p:outputLabel value="#{item.valorUnitario}" />
+							</p:column>
+							<p:column headerText="Ações" style="width:10%">
+								<p:commandButton title="Remover" icon="ui-icon-trash"
+									action="#{contaMB.removerItemConta()}" process="frmListaItems">
+									<f:setPropertyActionListener target="#{contaMB.itemConta}"
+										value="#{item}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</h:form>
+
+
+				</p:panel>
+			</p:column>
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>

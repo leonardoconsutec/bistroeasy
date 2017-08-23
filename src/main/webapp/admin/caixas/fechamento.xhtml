@@ -9,6 +9,7 @@
 	<ui:define name="content">
 		<p:panel header="Resumo Caixa">
 			<h:form>
+			<p:hotkey bind="esc" action="/admin/main/index.jsf?faces-redirect=true" />
 				<p:growl id="message" />
 				<h:panelGrid columns="2" >
 					<p:outputLabel value="Dinheiro: " />

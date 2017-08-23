@@ -1,0 +1,58 @@
+@CHARSET "UTF-8";
+/* Header
+-----------------------------------------------------------------------------*/
+.top {
+	height: 170px;
+	margin-bottom: auto;
+	margin-top:auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+/* Middle
+-----------------------------------------------------------------------------*/
+.content {
+	width:80%;
+	height: 1000px;
+	margin-bottom: auto;
+	margin-top:auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Footer
+-----------------------------------------------------------------------------*/
+.footer {
+	height: 100px;
+	background: #A9A9A9;
+}
+
+.painelLogin{
+	width:20%;
+	height: 200px;
+	margin-bottom: auto;
+	margin-top:auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+.styleGreen {
+	width: 100px !important;
+	height: 100px !important;
+	font-size: 40px !important;
+	border-radius: 15px !important;
+	background-color: #00FF00 !important;
+}
+.styleRed {
+	width: 100px !important;
+	height: 100px !important;
+	font-size: 40px !important;
+	border-radius: 15px !important;
+	background-color: #FF0000 !important;
+}
+
+.styleYellow {
+	width: 100px !important;
+	height: 100px !important;
+	font-size: 40px !important;
+	border-radius: 15px !important;
+	background-color: #FFFF00 !important;
+}

@@ -12,29 +12,32 @@
 <ui:composition template="/templates/basePrincipal.xhtml">
 	<ui:define name="content">
 		<h:form>
+			<p:hotkey bind="esc"
+				action="/admin/main/index.jsf?faces-redirect=true" />
 			<p:toolbar>
 				<f:facet name="left">
 					<p:commandButton value="Novo" icon="ui-icon-document"
-						action="cadastrar" process="@form" />
+						action="cadastrar.jsf?faces-redirect=true" process="@form" />
 				</f:facet>
 			</p:toolbar>
 		</h:form>
 		<h:form prependId="false" id="frmPrds">
 			<p:growl />
-			<p:dataTable value="#{produtoMB.produtos}" var="p"
-				paginator="true" emptyMessage="Nenhum Produto cadastrado" rows="10">
+			<p:dataTable value="#{produtoMB.produtos}" var="p" paginator="true"
+				emptyMessage="Nenhum Produto cadastrado" rows="10">
 				<p:column headerText="ID" style="width:15%">
 					<h:outputText value="#{p.id}" />
 				</p:column>
 				<p:column headerText="Descrição" style="width:50%">
 					<h:outputText value="#{p.descricao}" />
 				</p:column>
-				<p:column headerText="Descrição" >
+				<p:column headerText="Descrição">
 					<h:outputText value="#{p.precoUnitario}" />
 				</p:column>
 				<p:column headerText="Ações">
 					<p:commandButton title="Editar" icon="ui-icon-pencil"
-					   update=":frmCadPrd" oncomplete="PF('edPrd').show()">
+						action="#{produtoMB.editar()}" 
+						process="@form" >
 						<f:setPropertyActionListener value="#{p}"
 							target="#{produtoMB.produto}" />
 					</p:commandButton>
@@ -46,44 +49,6 @@
 				</p:column>
 			</p:dataTable>
 		</h:form>
-		<p:dialog id="edicaoPrd" widgetVar="edPrd" width="1000" height="300">
-			<h:form prependId="false" id="frmCadPrd">
-				<p:panel id="painel" header="Cadastro de Produto">
-					<p:growl />
-					<h:panelGrid columns="3" cellpadding="5">
-					<p:outputLabel value="Descrição: * " />
-					<p:inputText id="descricao" value="#{produtoMB.produto.descricao}"
-						size="60" maxlength="60" required="true"
-						requiredMessage="Descrição é obrigatória">
-						<f:validateLength minimum="5" />
-					</p:inputText>
-					<p:message for="descricao" id="msgdesc" display="icon" />
-					<p:outputLabel value="Preço Unitário: * " />
-					<p:inputNumber id="preco"
-						value="#{produtoMB.produto.precoUnitario}" symbol="R$ "
-						symbolPosition="p" decimalSeparator="," thousandSeparator="." />
-					<p:outputLabel value="" />
-					<p:outputLabel value="Tipo de Produto: * " />
-					<p:selectOneMenu id="tipo" value="#{produtoMB.produto.tipoProduto}"
-						converter="entityConverter">
-						<f:selectItems value="#{tipoProdutoMB.tiposProduto}" var="tipo"
-							itemLabel="#{tipo.descricao}" />
-					</p:selectOneMenu>
-					<p:outputLabel value="" />
-					<p:outputLabel value="Acompanhamentos: " />
-					<p:inputText id="acompanhamentos"
-						value="#{produtoMB.produto.acompanhamentos}" size="80"
-						maxlength="80" />
-					<p:outputLabel value="" />
-					<p:outputLabel value="Serve: " />
-					<p:spinner id="serve" value="#{produtoMB.produto.serve}" min="0"/>
-					<p:outputLabel value="" />
-				</h:panelGrid>
-					<p:commandButton action="#{produtoMB.update()}" value="Salvar" process="@form"
-						update=":frmPrds" icon="ui-icon-check" oncomplete="PF('edPrd').hide()" />
-				</p:panel>
-			</h:form>
-		</p:dialog>
 	</ui:define>
 </ui:composition>
 

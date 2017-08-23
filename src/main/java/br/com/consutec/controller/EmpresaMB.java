@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -37,13 +39,26 @@ public class EmpresaMB implements Serializable {
 	@PostConstruct
 	public void init() {
 		empresa = new Empresa();
+		inicializaEmpresa();
+	}
+	
+	public void inicializaEmpresa(){
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String id = request.getParameter("id");
+		if(id != null){
+		   empresa = empresaDAO.findByid(Long.valueOf(id));
+		}
+	}
+	
+	public String editar(){
+		return "atualizar.jsf?faces-redirect=true&id="+empresa.getId();
 	}
 
 	public String save() {
 		try {
 			empresaDAO.save(empresa);
 			FacesMessageUtils.info("Empresa adicionado com sucesso!");
-			return "listar";
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não Foi possivel adicionar a Empresa");
@@ -51,13 +66,15 @@ public class EmpresaMB implements Serializable {
 		}
 	}
 
-	public void update() {
+	public String update() {
 		try {
 			empresa = empresaDAO.update(empresa);
 			FacesMessageUtils.info("Empresa foi atualizada com sucesso!");
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessageUtils.error("Não Foi possivel atualizar a Empresa");
+			return null;
 		}
 	}
 

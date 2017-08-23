@@ -92,6 +92,7 @@ public class SessaoMB implements Serializable {
 	        }else{
 	             liberado = false;
 	        }
+	        liberado = true;
 			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -129,6 +130,7 @@ public class SessaoMB implements Serializable {
 	public void logar() {
 		try {
 			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getExternalContext().redirect("/bistroeasy/admin/main/index.jsf");
 			if (verificaLicenca()) {
 				usuario = usuarioDAO.buscaUsuario(login, senha, true);
 				if (usuario.getId() == null) {
@@ -137,7 +139,7 @@ public class SessaoMB implements Serializable {
 					fc.getExternalContext().redirect("/bistroeasy/admin/main/index.jsf");
 				}
 			} else {
-				//FacesMessageUtils.error("Sistema Está com a licença vencida, favor contactar nosso setor comercial");
+				FacesMessageUtils.error("Sistema Está com a licença vencida, favor contactar nosso setor comercial");
 				RequestContext.getCurrentInstance().execute("PF('licenca').show();");
 			}
 		} catch (Exception e) {

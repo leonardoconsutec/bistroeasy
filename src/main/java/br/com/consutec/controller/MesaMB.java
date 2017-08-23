@@ -58,7 +58,7 @@ public class MesaMB implements Serializable {
 				}
 			}
 			FacesMessageUtils.info("Mesas cadastradas com sucesso!");
-			return "listar";
+			return "listar.jsf?faces-redirect=true";
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível cadastrar as mesas!");
 			return null;

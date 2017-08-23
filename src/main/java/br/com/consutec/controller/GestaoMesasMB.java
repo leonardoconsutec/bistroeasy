@@ -50,7 +50,7 @@ public class GestaoMesasMB implements Serializable{
 			mesas = mesaDAO.listarMesasLoja(sessao.getLojaSelecionada());
 			for(Mesa ms : mesas){
 				CommandButton btn = new CommandButton();
-				btn.setUpdate(":detalhesMesa");
+				//btn.setUpdate(":detalhesMesa");
 				FacesContext context =FacesContext.getCurrentInstance();
 			    ELContext elContext = context.getELContext();
 			    String metodo = String.format("#{contaMB.verificaMesa('%s')}", ms.getId().toString());
