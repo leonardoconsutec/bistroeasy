@@ -66,8 +66,8 @@ public class SessaoMB implements Serializable {
 		alertaexpiracao = "";
 	}
 	public boolean verificaLicenca() {
-		boolean liberado = false;
-		try {
+		boolean liberado = true;
+		/*try {
 			Sistema sistema = sistemaDAO.findByid(Long.valueOf("1"));
 			String serial =  sistema.getChave();
 			byte[] chave = "teresinaconsutec".getBytes("UTF-8");
@@ -106,7 +106,7 @@ public class SessaoMB implements Serializable {
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		return liberado;
 	}

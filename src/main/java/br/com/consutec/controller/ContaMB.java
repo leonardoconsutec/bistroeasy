@@ -206,7 +206,7 @@ public class ContaMB implements Serializable {
 
 	}
 
-	public void trocarMesa() {
+	public String trocarMesa() {
 		try {
 			Mesa mesaAtual = mesa;
 			Mesa mesaNova = mesaDAO.findMesaLoja(sessao.getLojaSelecionada(), mesaTroca.longValue());
@@ -219,12 +219,17 @@ public class ContaMB implements Serializable {
 				mesaDAO.update(mesaNova);
 				conta.setMesa(mesaNova);
 				contaDAO.update(conta);
-				FacesMessageUtils.info("Mesa trocada com sucesso!");
+				FacesContext fc = FacesContext.getCurrentInstance();
+				FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO,"Mesa Trocada com sucesso!","Mesa Trocada com sucesso!");
+				fc.getExternalContext().getFlash().setKeepMessages(true);
+				fc.addMessage("", fm);
 			}
-			atualizarListaMesas();
+			return "listar?faces-redirect=true";
+			//atualizarListaMesas();
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível Fechar a mesa");
 			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -365,6 +370,12 @@ public class ContaMB implements Serializable {
 			FacesMessageUtils.error("produto não encontrado");
 		}
 	}
+	
+	public void selecaoFrmProduto(){
+		idprd = new BigDecimal(produto.getId());
+		descricaoProd = produto.getDescricao();
+	}
+	
 	public String adicionarItemConta() {
 		try {
 			produto = produtoDAO.findByid(idprd.longValue());

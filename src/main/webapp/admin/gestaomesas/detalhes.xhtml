@@ -22,6 +22,8 @@
 		<h:form>
 			<p:hotkey bind="esc"
 				action="/admin/gestaomesas/listar.jsf?faces-redirect=true" />
+			<p:hotkey bind="ctrl+shift"
+				action="/admin/gestaomesas/listar.jsf?faces-redirect=true" />	
 		</h:form>
 		<p:panelGrid class="ui-noborder">
 			<p:column style="vertical-align: top;">
@@ -52,7 +54,7 @@
 					<h:form id="frmOpcoes">
 						<p:commandButton value="F7 - Trocar Mesa "
 							style="width:300px !important; height: 70px !important;"
-							process="@form" />
+							process="@form" oncomplete="PF('trocaMesa').show();"/>
 						<p:commandButton value="F8 - Imprimir Conta"
 							style="width:300px !important; height: 70px !important;"
 							action="#{contaMB.imprimeConta()}" process="frmOpcoes"
@@ -106,11 +108,13 @@
 					<h:form id="frmlsprd">
 						<p:dataTable id="lstPrd" value="#{contaMB.produtos}"
 							scrollable="true" scrollHeight="210"
+							selectionMode="single" selection="#{contaMB.produto}" rowKey="#{prd.id}"
 							filteredValue="#{contaMB.produtosFiltrados}" var="prd"
 							emptyMessage="Nenhum produto cadastrado!">
 							<f:facet name="header">
 								<h:outputText value="Cadastro de produtos" />
 							</f:facet>
+							<p:ajax event="rowSelect" listener="#{contaMB.selecaoFrmProduto()}" update=":frmLancamentos" />
 							<p:column headerText="Id" sortBy="#{prd.id}" style="width:10%">
 								<h:outputText value="#{prd.id}" />
 							</p:column>
@@ -163,5 +167,21 @@
 				</p:panel>
 			</p:column>
 		</p:panelGrid>
+		
+		<p:dialog id="dialogTroca" widgetVar="trocaMesa"
+			header="Troca de Mesas" width="400" height="110" modal="true"
+			appendTo="@(body)" resizable="false" draggable="false">
+			<p:panelGrid id="painelTroca" columns="2" class="ui-noborder">
+				<p:growl />
+				<h:form id="frmTrocaMesa">
+					<p:outputLabel value="Informe a Mesa Destino: " />
+					<p:inputNumber decimalPlaces="0" decimalSeparator="."
+						thousandSeparator="," size="4" value="#{contaMB.mesaTroca}" />
+					<p:commandButton value="Trocar" action="#{contaMB.trocarMesa()}"
+						process="@form" oncomplete="PF('trocaMesa').hide();" />
+				</h:form>
+			</p:panelGrid>
+		</p:dialog>
+		
 	</ui:define>
 </ui:composition>

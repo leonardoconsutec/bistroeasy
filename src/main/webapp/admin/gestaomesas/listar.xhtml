@@ -74,24 +74,6 @@
 			</h:form>
 		</p:dialog>
 
-
-		
-		<p:dialog id="dialogTroca" widgetVar="trocaMesa"
-			header="Troca de Mesas" width="400" height="110" modal="true"
-			appendTo="@(body)" resizable="false" draggable="false">
-			<p:panelGrid id="painelTroca" columns="2" class="ui-noborder">
-				<p:growl />
-				<h:form id="frmTrocaMesa">
-					<p:outputLabel value="Informe a Mesa Destino: " />
-					<p:inputNumber decimalPlaces="0" decimalSeparator="."
-						thousandSeparator="," size="4" value="#{contaMB.mesaTroca}" />
-					<p:commandButton value="Trocar" action="#{contaMB.trocarMesa()}"
-						process="@form" update=":frmSelecaoMesa"
-						oncomplete="PF('trocaMesa').hide();" />
-				</h:form>
-			</p:panelGrid>
-		</p:dialog>
-
 		<p:dialog id="dialogFecha" widgetVar="fechaConta" width="1200"
 			modal="true" height="900" appendTo="@(body)" resizable="false"
 			draggable="false" header="Encerramento da Conta">
