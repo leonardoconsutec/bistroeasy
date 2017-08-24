@@ -1,0 +1,135 @@
+<ui:composition template="/templates/basePrincipal.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="header">
+		<f:metadata>
+			<f:viewAction action="#{contaMB.inicializaMesa()}" />
+		</f:metadata>
+		<script type="text/javascript">
+	       function GetChar (event, id){
+               var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
+               if(chCode == 13){
+                  document.getElementById(id).focus();
+               }
+           }		    
+	    </script>
+	</ui:define>
+	<ui:define name="content">
+
+		<p:growl />
+
+		<h:form>
+			<p:hotkey bind="esc" action="#{contaMB.sairFechamento()}" />
+		</h:form>
+		<p:focus for="gridTiposPagamento" />
+		<h:form id="frmFechaConta" prependId="false"
+			onkeypress="if( event.keyCode == 13 ){return false}">
+			<p:growl />
+
+			<p:commandButton action="#{contaMB.sairFechamento()}"
+				value="ESC - Cancelar" />
+			<p:panel header="Tipos de Pagamento">
+				<p:panelGrid id="gridTiposPagamento" class="ui-noborder" columns="3">
+					<p:outputLabel value="Tipo" />
+					<p:outputLabel value="Valor:" />
+					<p:outputLabel value="" />
+					<h:selectOneMenu value="#{contaMB.pagamento.tipoPagamento}"
+						style="width:125px" id="tipoSel"
+						onkeypress="GetChar (event,'valorpg');">
+						<f:selectItem itemLabel="Dinheiro" itemValue="0" />
+						<f:selectItem itemLabel="Cartão" itemValue="1" />
+						<f:selectItem itemLabel="Cheque" itemValue="2" />
+						<f:selectItem itemLabel="Convênio" itemValue="3" />
+					</h:selectOneMenu>
+					<h:inputText value="#{contaMB.pagamento.valor}" id="valorpg"
+						onkeypress="GetChar (event,'btnadd');">
+						<f:convertNumber currencySymbol="R$" maxFractionDigits="2" />
+					</h:inputText>
+					<p:commandButton value="Adicionar"
+						action="#{contaMB.adicionarPagamento()}" process="frmFechaConta"
+						update="frmFechaConta" id="btnadd"
+						onkeypress="if( event.keyCode == 13 ){this.click(); GetChar (event,'tipoSel');}" />
+				</p:panelGrid>
+			</p:panel>
+			<p:panel header="Totais Conta">
+				<p:panelGrid id="gridTotaisConta" class="ui-noborder" columns="2">
+					<p:outputLabel value="Total Produtos: " />
+					<p:inputNumber decimalPlaces="2" decimalSeparator=","
+						thousandSeparator="." symbol="R$ " symbolPosition="p" minValue="0"
+						emptyValue="0" value="#{contaMB.conta.totalProdutos}"
+						readonly="true" />
+					<p:outputLabel value="Taxa Serviço: " />
+					<p:inputNumber decimalPlaces="2" decimalSeparator=","
+						thousandSeparator="." symbol="R$ " symbolPosition="p" minValue="0"
+						emptyValue="0" value="#{contaMB.conta.taxaServico}"
+						readonly="true" />
+					<p:outputLabel value="Desconto: " />
+					<p:column>
+						<p:inputNumber decimalPlaces="2" decimalSeparator=","
+							thousandSeparator="." symbol="R$ " symbolPosition="p"
+							minValue="0" emptyValue="0" value="#{contaMB.conta.desconto}" />
+						<p:spacer width="10" />
+						<p:commandButton value="F7 - Aplicar Desconto"
+							action="#{contaMB.aplicarDesconto()}" process="frmFechaConta"
+							update="frmFechaConta" />
+					</p:column>
+					<p:outputLabel value="Total Conta: " />
+					<p:inputNumber decimalPlaces="2" decimalSeparator=","
+						thousandSeparator="." symbol="R$ " symbolPosition="p" minValue="0"
+						emptyValue="0" value="#{contaMB.conta.valorTotal}" />
+					<p:outputLabel value="Total Pago: " />
+					<p:inputNumber decimalPlaces="2" decimalSeparator=","
+						thousandSeparator="." symbol="R$ " symbolPosition="p" minValue="0"
+						emptyValue="0" value="#{contaMB.totalPago}" />
+					<p:outputLabel value="Total Troco: " />
+					<p:inputNumber decimalPlaces="2" decimalSeparator=","
+						thousandSeparator="." symbol="R$ " symbolPosition="p"
+						emptyValue="0" value="#{contaMB.troco}" />
+				</p:panelGrid>
+			</p:panel>
+			<center>
+				<br />
+				<p:commandButton value="F10 - Fechar Conta"
+					action="#{contaMB.fecharMesa()}" process="frmFechaConta"
+					update="frmFechaConta"
+					style="width:300px !important; height: 70px !important;">
+					<p:confirm header="Confirmação" message="Tem certeza?"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="SIM" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="NÃO" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</center>
+			<br />
+			<p:dataTable id="tbpagamentos" value="#{contaMB.pagamentos}"
+				rows="10" paginator="true" var="pag">
+				<p:column headerText="Tipo">
+					<h:outputText value="Dinheiro" rendered="#{pag.tipoPagamento == 0}" />
+					<h:outputText value="Cartão" rendered="#{pag.tipoPagamento == 1}" />
+					<h:outputText value="Cheque" rendered="#{pag.tipoPagamento == 2}" />
+					<h:outputText value="Convênio" rendered="#{pag.tipoPagamento == 3}" />
+				</p:column>
+				<p:column headerText="Valor Pago">
+					<p:inputNumber value="#{pag.valor}" decimalPlaces="2"
+						decimalSeparator="," thousandSeparator="." emptyValue="0"
+						symbol="R$ " symbolPosition="p" />
+				</p:column>
+				<p:column headerText="Ações">
+					<p:commandButton title="Remover" icon="ui-icon-trash"
+						action="#{contaMB.removerPagamento()}" process="@form"
+						update="@form">
+						<f:setPropertyActionListener target="#{contaMB.pagamento}"
+							value="#{pag}" />
+						<p:focus for="gridTiposPagamento" />	
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

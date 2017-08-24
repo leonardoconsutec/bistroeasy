@@ -38,7 +38,6 @@ public class TipoProduto implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
@@ -51,11 +50,6 @@ public class TipoProduto implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		TipoProduto other = (TipoProduto) obj;
-		if (descricao == null) {
-			if (other.descricao != null)
-				return false;
-		} else if (!descricao.equals(other.descricao))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -63,6 +57,7 @@ public class TipoProduto implements Serializable {
 			return false;
 		return true;
 	}
+	
     
 	
 

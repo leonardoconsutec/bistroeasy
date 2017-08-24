@@ -68,8 +68,6 @@ public class ItemConta implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((quantidade == null) ? 0 : quantidade.hashCode());
-		result = prime * result + ((valorUnitario == null) ? 0 : valorUnitario.hashCode());
 		return result;
 	}
 	@Override
@@ -86,18 +84,9 @@ public class ItemConta implements Serializable{
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (quantidade == null) {
-			if (other.quantidade != null)
-				return false;
-		} else if (!quantidade.equals(other.quantidade))
-			return false;
-		if (valorUnitario == null) {
-			if (other.valorUnitario != null)
-				return false;
-		} else if (!valorUnitario.equals(other.valorUnitario))
-			return false;
 		return true;
 	}
+	
     
     
 }

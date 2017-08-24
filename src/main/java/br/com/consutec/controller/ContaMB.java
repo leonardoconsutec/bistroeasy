@@ -116,6 +116,7 @@ public class ContaMB implements Serializable {
 				Long seq = mesa.getSequencial();
 				mesa = mesaDAO.findMesaLoja(sessao.getLojaSelecionada(), seq);
 				if (mesa.getStatus() == 0) {
+					garcom.setId(Long.valueOf("1"));
 					RequestContext.getCurrentInstance().execute("PF('dialogAbrirMesa').show();");
 					return null;
 				} else {
@@ -126,6 +127,13 @@ public class ContaMB implements Serializable {
 			e.printStackTrace();
 			return "detalhes?id="+mesa.getId()+"&faces-redirect=true";
 		}
+	}
+	
+	public String abrirFechamento(){
+		return "fechamento?id="+mesa.getId()+"&faces-redirect=true";
+	}
+	public String sairFechamento(){
+		return "detalhes?id="+mesa.getId()+"&faces-redirect=true";
 	}
 	
 	public void inicializaMesa(){
@@ -151,10 +159,10 @@ public class ContaMB implements Serializable {
 				Long idenviado = Long.valueOf(id);
 				mesa = mesaDAO.findByid(idenviado);
 				if (mesa.getStatus() == 0) {
+					garcom.setId(Long.valueOf("1"));
 					RequestContext.getCurrentInstance().execute("PF('dialogAbrirMesa').show();");
 					return null;
 				} else {
-					//RequestContext.getCurrentInstance().execute("PF('detalhes').show();");
 					return "detalhes?id="+mesa.getId()+"&faces-redirect=true";
 				}
 			}
@@ -185,23 +193,10 @@ public class ContaMB implements Serializable {
 			conta.setLoja(sessao.getLojaSelecionada());
 			contaDAO.save(conta);
 			mesaDAO.update(mesa);
-			atualizarListaMesas();
-			//RequestContext.getCurrentInstance().execute("PF('detalhes').show();");
 			return "detalhes?id="+mesa.getId()+"&faces-redirect=true";
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível Abrir a mesa");
 			return null;
-		}
-
-	}
-
-	public void atualizarListaMesas() {
-		try {
-			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-			ec.getFlash().setKeepMessages(true);
-			ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}
@@ -225,7 +220,6 @@ public class ContaMB implements Serializable {
 				fc.addMessage("", fm);
 			}
 			return "listar?faces-redirect=true";
-			//atualizarListaMesas();
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível Fechar a mesa");
 			e.printStackTrace();
@@ -235,13 +229,17 @@ public class ContaMB implements Serializable {
 
 	public void adicionarPagamento() {
 		try {
-			pagamento.setConta(conta);
-			pagamentoDAO.save(pagamento);
-			pagamentos = pagamentoDAO.listarPorConta(conta);
-			pagamento = new Pagamento();
-			calculaTotalPago();
-			calculaTroco();
-			FacesMessageUtils.info("Pagamento Adicionado!");
+			if(pagamento.getValor() == null){
+				FacesMessageUtils.error("Informe um valor de pagamento!");
+			}else{
+				pagamento.setConta(conta);
+				pagamentoDAO.save(pagamento);
+				pagamentos = pagamentoDAO.listarPorConta(conta);
+				pagamento = new Pagamento();
+				calculaTotalPago();
+				calculaTroco();
+				FacesMessageUtils.info("Pagamento Adicionado!");
+			}
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível adicionar o pagamento");
 			e.printStackTrace();
@@ -250,8 +248,10 @@ public class ContaMB implements Serializable {
 
 	public void removerPagamento() {
 		try {
-			pagamentoDAO.remove(pagamento);
 			pagamentos = pagamentoDAO.listarPorConta(conta);
+			conta.setPagamentos(pagamentos);
+			conta.getPagamentos().remove(pagamento);
+			contaDAO.update(conta);
 			pagamento = new Pagamento();
 			calculaTotalPago();
 			calculaTroco();
@@ -285,7 +285,7 @@ public class ContaMB implements Serializable {
 
 	}
 
-	public void fecharMesa() {
+	public String fecharMesa() {
 		try {
 			if (conta.getValorTotal().compareTo(totalPago) <= 0) {
 				mesa.setStatus(Long.valueOf("0"));
@@ -297,29 +297,40 @@ public class ContaMB implements Serializable {
 					pgTroco.setValor(troco);
 					pagamentoDAO.save(pgTroco);
 				}
+				pagamentos = pagamentoDAO.listarPorConta(conta);
+				conta.setPagamentos(pagamentos);
 				conta.setStatus(Long.valueOf("0"));
 				conta.setMesa(mesa);
 				contaDAO.update(conta);
-				atualizarListaMesas();
-				FacesMessageUtils.info("Mesa Fechada com sucesso!");
+				FacesContext fc = FacesContext.getCurrentInstance();
+				FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO,"Mesa fechada com sucesso!","Mesa fechada com sucesso!");
+				fc.getExternalContext().getFlash().setKeepMessages(true);
+				fc.addMessage("", fm);
+				return "listar?faces-redirect=true";
 			} else {
-				RequestContext.getCurrentInstance().execute("PF('fechaConta').show();");
 				FacesMessageUtils.info("Total de pagamentos não é suficiente para quitar a conta!");
+				return null;
 			}
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível Fechar a mesa");
+			return null;
 		}
 	}
 
-	public void encerrarConta() {
+	public String encerrarConta() {
 		try {
 			mesa = mesaDAO.findByid(mesa.getId());
 			mesa.setStatus(Long.valueOf("2"));
 			mesaDAO.update(mesa);
-			atualizarListaMesas();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO,"Mesa encerrada com sucesso!","Mesa encerrada com sucesso!");
+			fc.getExternalContext().getFlash().setKeepMessages(true);
+			fc.addMessage("", fm);
+			return "listar?faces-redirect=true";
 		} catch (Exception e) {
 			FacesMessageUtils.error("Não foi possível encerrar a mesa!");
 			e.printStackTrace();
+			return null;
 		}
 
 	}

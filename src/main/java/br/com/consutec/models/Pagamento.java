@@ -59,8 +59,6 @@ public class Pagamento implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((tipoPagamento == null) ? 0 : tipoPagamento.hashCode());
-		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
 	}
 	@Override
@@ -77,17 +75,8 @@ public class Pagamento implements Serializable{
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (tipoPagamento == null) {
-			if (other.tipoPagamento != null)
-				return false;
-		} else if (!tipoPagamento.equals(other.tipoPagamento))
-			return false;
-		if (valor == null) {
-			if (other.valor != null)
-				return false;
-		} else if (!valor.equals(other.valor))
-			return false;
 		return true;
 	}
+	
     
 }
